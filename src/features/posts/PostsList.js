@@ -1,9 +1,5 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { PostAuthor } from './PostAuthor'
-import { TimeAgo } from './TimeAgo'
-import { ReactionButtons } from './ReactionButtons'
 import { PostExcerpt } from './PostExcerpt'
 import { selectAllPosts, fetchPosts } from './postsSlice'
 
