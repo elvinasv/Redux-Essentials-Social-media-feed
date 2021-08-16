@@ -1,6 +1,14 @@
 import { createSlice, nanoid } from '@reduxjs/toolkit'
 import { sub } from 'date-fns'
 
+const initialReactions = {
+  thumbsUp: 0,
+  hooray: 0,
+  heart: 0,
+  rocket: 0,
+  eyes: 0,
+}
+
 const initialState = [
   {
     id: '1',
@@ -8,6 +16,7 @@ const initialState = [
     title: 'First Post!',
     content: 'Hello!',
     date: sub(new Date(), { minutes: 10 }).toISOString(),
+    reactions: initialReactions,
   },
   {
     id: '2',
@@ -15,6 +24,7 @@ const initialState = [
     title: 'Second Post',
     content: 'More text',
     date: sub(new Date(), { minutes: 5 }).toISOString(),
+    reactions: initialReactions,
   },
 ]
 
@@ -34,6 +44,7 @@ const postsSlice = createSlice({
             title,
             content,
             user: userId,
+            reactions: initialReactions,
           },
         }
       },
@@ -46,9 +57,18 @@ const postsSlice = createSlice({
         existingPost.content = content
       }
     },
+    reactionAdded(state, action) {
+      const { postId, reaction } = action.payload
+      const existingPost = state.find((post) => post.id === postId)
+      if (existingPost) {
+        existingPost.reactions[reaction] = existingPost.reactions[reaction] // (!) mutating; Immer handles the cases
+          ? existingPost.reactions[reaction] + 1
+          : 1
+      }
+    },
   },
 })
 
-export const { postAdded, postUpdated } = postsSlice.actions
+export const { postAdded, postUpdated, reactionAdded } = postsSlice.actions
 
 export default postsSlice.reducer
